@@ -1,25 +1,46 @@
 import "./App.css";
 import { useState } from "react";
-import TempInput from "./TempInput";
-import UnitSelector from "./UnitSelector";
 
-const App = () => {
-  const [temperature, setTemperature] = useState("");
-  const [unit, setUnit] = useState("Celsius");
+// 함수명을 영상의 'Form'에서 'App'으로 수정했습니다.
+function App() {
+  const [formData, setFormData] = useState({
+    username: "",
+    isSubscribed: false,
+    role: "user",
+  });
+  const roles = ["user", "admin", "guest"];
 
-  const convertedTemp = unit === "Celsius" ? ((temperature * 9) / 5 + 32).toFixed(1) : (((temperature - 32) * 5) / 9).toFixed(1);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
 
   return (
-    <div>
-      <h2>Temperature Converter</h2>
+    <form>
       <p>
-        Converted: {temperature ? convertedTemp : "--"}
-        {unit === "Celsius" ? "°F" : "°C"}
+        Name: {formData.username}
+        {formData.isSubscribed && " (Subscribed)"}
       </p>
-      <TempInput value={temperature} unit={unit} onChange={setTemperature} />
-      <UnitSelector unit={unit} onUnitChange={setUnit} />
-    </div>
+      <p>Role: {formData.role}</p>
+      <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} />
+
+      <label>
+        <input type="checkbox" name="isSubscribed" checked={formData.isSubscribed} onChange={handleChange} />
+        Subscribe
+      </label>
+
+      <select name="role" value={formData.role} onChange={handleChange}>
+        {roles.map((r) => (
+          <option key={r} value={r}>
+            {r}
+          </option>
+        ))}
+      </select>
+    </form>
   );
-};
+}
 
 export default App;
