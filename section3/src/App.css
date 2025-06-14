@@ -9,21 +9,7 @@
   color: black;
 }
 
-.user-profile,
-.temp-input,
-.unit-selector {
-  margin: 8px 0;
-  padding: 12px 16px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-}
-
-.user-profile h3 {
-  margin: 0;
-}
-
-input[type="text"],
-select {
+input[type="text"] {
   display: block;
   margin: 8px 0;
   padding: 4px;

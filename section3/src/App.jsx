@@ -1,45 +1,27 @@
 import "./App.css";
-import { useState } from "react";
+import React, { useReducer } from "react";
+import { countReducer, initialState } from "./reducers/countReducer";
 
-// 함수명을 영상의 'Form'에서 'App'으로 수정했습니다.
 function App() {
-  const [formData, setFormData] = useState({
-    username: "",
-    isSubscribed: false,
-    role: "user",
-  });
-  const roles = ["user", "admin", "guest"];
+  const [state, dispatch] = useReducer(countReducer, initialState);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
+  const handleClick = (type, value, event) => {
+    const { clientX: x, clientY: y } = event;
+    dispatch({
+      type,
+      payload: { value },
+      meta: { x, y },
     });
   };
 
   return (
-    <form>
-      <p>
-        Name: {formData.username}
-        {formData.isSubscribed && " (Subscribed)"}
-      </p>
-      <p>Role: {formData.role}</p>
-      <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} />
-
-      <label>
-        <input type="checkbox" name="isSubscribed" checked={formData.isSubscribed} onChange={handleChange} />
-        Subscribe
-      </label>
-
-      <select name="role" value={formData.role} onChange={handleChange}>
-        {roles.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </select>
-    </form>
+    <>
+      <p>Count: {state.count}</p>
+      <button onClick={(e) => handleClick("INC", 1, e)}>+1</button>
+      <button onClick={(e) => handleClick("DEC", 1, e)}>-1</button>
+      <button onClick={(e) => handleClick("INC", 2, e)}>+2</button>
+      <button onClick={(e) => handleClick("DEC", 2, e)}>-2</button>
+    </>
   );
 }
 
