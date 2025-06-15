@@ -1,29 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import Timer from "./component/Timer";
 
 function App() {
-  const [count, setCount] = useState(1);
-  const [name, setName] = useState("");
-
-  const handleCountUpdate = () => {
-    setCount(count + 1);
-  };
-
-  const handleInputChange = (e) => {
-    setName(e.target.value);
-  };
-
-  // 마운트  + [item] 변경될때만 실행
-  useEffect(() => {
-    console.log("count 변화");
-  }, [count]);
-
+  const [showTimer, setShowTimer] = useState(false);
   return (
     <>
-      <button onClick={handleCountUpdate}>Update</button>
-      <span>count: {count}</span>
-      <input type="text" value={name} onChange={handleInputChange} />
-      <span>name: {name}</span>
+      {showTimer && <Timer />}
+      <button onClick={() => setShowTimer(!showTimer)}> Toggle Timer</button>
     </>
   );
 }
