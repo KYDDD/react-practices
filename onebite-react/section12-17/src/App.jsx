@@ -5,33 +5,15 @@ import New from "./pages/New";
 import Diary from "./pages/Diary";
 import Edit from "./pages/Edit";
 import Notfound from "./pages/Notfound";
-import { createContext, useReducer, useRef } from "react";
-
-const mockData = [
-  {
-    id: 1,
-    createdDate: new Date("2025-07-13").getTime(),
-    emotionId: 1,
-    content: "1번 일기 내용",
-  },
-  {
-    id: 2,
-    createdDate: new Date("2025-07-12").getTime(),
-    emotionId: 2,
-    content: "2번 일기 내용",
-  },
-  {
-    id: 3,
-    createdDate: new Date("2025-06-09").getTime(),
-    emotionId: 3,
-    content: "3번 일기 내용",
-  },
-];
+import { createContext, useEffect, useReducer, useRef } from "react";
+import { useState } from "react";
 
 function reducer(state, action) {
   let nextState;
 
   switch (action.type) {
+    case "INIT":
+      return action.data;
     case "CREATE": {
       nextState = [action.data, ...state];
       break;
@@ -56,20 +38,38 @@ export const DiaryStateContext = createContext();
 export const DiaryDispatchContext = createContext();
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, mockData);
-  const idRef = useRef(4);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, dispatch] = useReducer(reducer, []);
+  const idRef = useRef(0);
 
-  //로컬 스토리지에 데이터를 저장하는 방법
-  // localStorage.setItem("test", "hello");
-  //객체형태의 값들은 저장하려면 문자열화 해서 값을 넘겨주어야 한다.
-  // localStorage.setItem("person", JSON.stringify({ name: "김연호" }));
+  useEffect(() => {
+    const storedData = localStorage.getItem("diary");
+    if (!storedData) {
+      setIsLoading(false);
+      return;
+    }
+    const parsedData = JSON.parse(storedData);
+    // parsedData가 배열이 아니면 return으로 강제 종료
+    if (!Array.isArray(parsedData)) {
+      setIsLoading(false);
+      return;
+    }
 
-  // console.log(localStorage.getItem("test"));
-  // 인수로 전달한 객체형태의 문자열을 파싱해서 객체로 다시 반환해줌
-  // console.log(JSON.parse(localStorage.getItem("person")));
+    let maxId = 0;
+    parsedData.forEach((item) => {
+      if (Number(item.id) > maxId) {
+        maxId = Number(item.id);
+      }
+    });
 
-  // 로컬 스토리지에 데이터를 삭제하는 방법
-  // localStorage.removeItem("test");
+    idRef.current = maxId + 1;
+
+    dispatch({
+      type: "INIT",
+      data: parsedData,
+    });
+    setIsLoading(false);
+  }, []);
 
   // 새로운 일기 추가
   const onCreate = (createdDate, emotionId, content) => {
@@ -77,7 +77,7 @@ function App() {
     dispatch({
       type: "CREATE",
       data: {
-        id: idRef.current++,
+        id: idRef.current,
         createdDate,
         emotionId,
         content,
@@ -105,7 +105,9 @@ function App() {
       id,
     });
   };
-
+  if (isLoading) {
+    return <div>데이터 로딩중입니다...</div>;
+  }
   return (
     <>
       <DiaryStateContext.Provider value={data}>

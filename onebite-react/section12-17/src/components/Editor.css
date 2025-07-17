@@ -1,0 +1,43 @@
+.Editor {
+  section {
+    margin-block-end: 40px;
+  }
+
+  input,
+  textarea {
+    background-color: rgb(236, 236, 236);
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px 20px;
+  }
+  .date_section {
+    h4 {
+      font-size: 22px;
+      font-weight: bold;
+    }
+  }
+
+  .emotion_section {
+    .emotion_list_wrapper {
+      display: flex;
+      justify-content: space-around;
+      gap: 2%;
+    }
+  }
+
+  .content_section {
+    textarea {
+      padding: 20px;
+      width: 100%;
+      min-height: 200px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+  }
+
+  .button_section {
+    display: flex;
+    justify-content: space-between;
+  }
+}

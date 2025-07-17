@@ -3,6 +3,7 @@ import Button from "../components/button";
 import DiaryList from "../components/DiaryList";
 import { useContext, useState } from "react";
 import { DiaryStateContext } from "../App";
+import usePageTitle from "../hooks/usePageTitle";
 
 //현재 설정된 달에 해당하는 일기데이터만 추출해서 반환, 가독성을 위해, 불필요한 함수의 재생성을 위해 컴포넌트 외부에 선언
 const getMonthlyData = (pivotDate, data) => {
@@ -14,6 +15,7 @@ const getMonthlyData = (pivotDate, data) => {
 const Home = () => {
   const data = useContext(DiaryStateContext);
   const [pivotDate, setPivotDate] = useState(new Date());
+  usePageTitle("감정 일기장");
 
   const monthlyData = getMonthlyData(pivotDate, data);
 
