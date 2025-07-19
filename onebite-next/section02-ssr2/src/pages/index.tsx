@@ -1,0 +1,48 @@
+// CSS Module
+import SearchableLayout from "@/components/searchable-layout";
+import style from "./index.module.css";
+import { ReactNode } from "react";
+import BookItem from "@/components/book-item";
+import { InferGetServerSidePropsType } from "next";
+import fetchBooks from "@/lib/fetch-books";
+import fetchRandomBooks from "@/lib/fetch-random-books";
+
+export const getServerSideProps = async () => {
+  // const allBooks = await fetchBooks();
+  // const recoBooks = await fetchRandomBooks();
+
+  //promise.all을 사용하면 인수로 전달한 배열에 들어있는 모든 비동기 함수들을 동시에 실행시켜줌
+  const [allBooks, recoBooks] = await Promise.all([fetchBooks(), fetchRandomBooks()]);
+
+  return {
+    props: {
+      allBooks,
+      recoBooks,
+    },
+  };
+};
+
+// getServerSideProps함수의 반환값 타입을 자동으로 추론해주는 기능을 하는 타입이다.
+export default function Home({ allBooks, recoBooks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  return (
+    <div className={style.container}>
+      <section>
+        <h3>지금 추천하는 도서</h3>
+        {recoBooks.map((book) => (
+          <BookItem key={book.id} {...book} />
+        ))}
+      </section>
+      <section>
+        <h3>등록된 모든 도서</h3>
+        {allBooks.map((book) => (
+          <BookItem key={book.id} {...book} />
+        ))}
+      </section>
+    </div>
+  );
+}
+
+//별도의 레이아웃이 지정되길 원하는 컴포넌트에 이런식으로 추가 할수 있음
+Home.getLayout = (page: ReactNode) => {
+  return <SearchableLayout>{page}</SearchableLayout>;
+};

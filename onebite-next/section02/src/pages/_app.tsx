@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
     //router객체의 push메서드는 인수로 전달받은 경로로 페이지를 클라이언트 사이드 렌더링 방식으로 이동시켜줌
     // 이런식으로 함수 내부에서도 페이지를 클라이언트 사이드 방식으로 이동시킬수 있다.
     router.push("/test");
+    //replace, back같은 메서드도 있음.
   };
 
   //내가 직접 마운트 될떄 프리패칭이 되도록 명시해줄수 있음
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Link>
         &nbsp;
         <Link href={"/book/1"}>book/1</Link>
+        {/* 이벤트가 발생했을떄 링크를 이동할수 있는 프로그래매틱한 페이지 이동 */}
         <div>
           <button onClick={onClickButton}>/test 페이지로 이동</button>
         </div>
