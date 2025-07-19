@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import style from "./[id].module.css";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext, GetStaticPropsContext, InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import fetchOneBook from "@/lib/fetch-one-book";
+import { notFound } from "next/navigation";
 
 const mockData = {
   id: 1,
@@ -14,18 +15,38 @@ const mockData = {
   coverImgUrl: "https://shopping-phinf.pstatic.net/main_3888828/38888282618.20230913071643.jpg",
 };
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+// 동적인 경로를 갖도록 설정된 페이지에 ssg를 적용하려면 반드시 사전렌더링이 진행되기전에 페이지에 존재할수 있는 모든 경로들을 직접 설정하는 작업을 진행해야 한다.
+export const getStaticPaths = () => {
+  return {
+    //어떠한 경로들이 존재할수 있는지를 배열로 반환하도록 설정
+    //url파라미터의 값은 반드시 문자열로만 설정해주어야 한다.
+    paths: [{ params: { id: "1" } }, { params: { id: "2" } }, { params: { id: "3" } }],
+    // fallback: "blocking", //등록해 놓지 않은 것을 ssr방식으로 렌더링
+    fallback: true, //blocking + ui를 먼저 전달하고 데이터는 나중에 렌더링
+  };
+};
+
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   //!를 붙혀서 params가 undefined가 아닐것이라고 단언해준다.
   const id = context.params!.id;
 
   const book = await fetchOneBook(Number(id));
+  // 존재하지 않는 페이지를 요청하면 notfound페이지를 보여줌
+  if (!book) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: { book },
   };
 };
 
-export default function Page({ book }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page({ book }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  if (router.isFallback) return "로딩중입니다"; //현재 페이지가 fallback상태일때 로딩 텍스트를 띄워줌
   if (!book) return "문제가 발생했습니다 다시 시도하세요";
   const { id, title, subTitle, description, author, publisher, coverImgUrl } = book;
   return (
