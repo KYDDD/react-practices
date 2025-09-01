@@ -1,7 +1,7 @@
 // 1. 배열 순회
 let arr = [1, 2, 3];
 
-// 1.2 배열 인덱스
+// 1.1 배열 인덱스
 for (let i = 0; i < arr.length; i++) {
   // console.log(arr[i]);
 }
@@ -35,6 +35,7 @@ for (let key of keys) {
 
 // 2.2 Object.values
 // -> 객체에서 value 값들만 뽑아서 새로운 배열로 반환
+// 객체를 순회할때 value값만 순회하면 된다면 Object.value를 사용하는것도 좋은 방법이 될수 있다.
 let values = Object.values(person);
 
 for (let value of values) {
@@ -46,3 +47,5 @@ for (let key in person) {
   const value = person[key];
   console.log(key, value);
 }
+
+// for...in 과 for...of를 헷갈리는 것 주의
