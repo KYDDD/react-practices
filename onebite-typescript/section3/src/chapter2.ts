@@ -44,5 +44,5 @@ function anyExam() {
 
   anyVar = unknownVar;
   undefinedVar = anyVar;
-  neverVar = anyVar;
+  // neverVar = anyVar;
 }
