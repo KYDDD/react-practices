@@ -13,7 +13,6 @@ delete animal.color; // 삭제
 
 // 2. 메서드
 // ->  값이 함수인 프로퍼티를 말함
-
 const person = {
   name: "이정환",
   //메서드 선언

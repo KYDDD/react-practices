@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import DiaryList from "../components/DiaryList";
 import { useState, useContext } from "react";
 import { DiaryStateContext } from "../App";
+import usePageTitle from "../hooks/usePageTitle";
 
 // 함수가 매개변수만으로도 필요한 데이터를 다 제공받을수 있으면 컴포넌트 외부에 선언.
 const getMonthlyData = (pivotDate, data) => {
@@ -17,6 +18,8 @@ const getMonthlyData = (pivotDate, data) => {
 export default function Home() {
   const data = useContext(DiaryStateContext);
   const [pivotDate, setPivotDate] = useState(new Date());
+
+  usePageTitle("감정 일기장");
 
   const monthlyData = getMonthlyData(pivotDate, data);
 
