@@ -39,11 +39,34 @@ function App() {
     setTodos([newTodo, ...todos]);
   }
 
+  function onUpdate(targetId) {
+    // 인수: todos 배열에서 targetId와 일치하는 id를 갖는 요소의 데이터만 딱 바꾼 새로운 배열
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === targetId) {
+          return {
+            ...todo,
+            isDone: !todo.isDone,
+          };
+        }
+        return todo;
+      }),
+    );
+  }
+
+  function onDelete(targetId) {
+    //인수: todos 배열에서 targetId와 일치하는 id를 갖는 요소만 삭제한 새로운 배열
+    setTodos(
+      todos.filter((todo) => {
+        return todo.id !== targetId;
+      }),
+    );
+  }
   return (
     <div className="App">
       <Header></Header>
       <Editor onCreate={onCreate}></Editor>
-      <List></List>
+      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete}></List>
     </div>
   );
 }
